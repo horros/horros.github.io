@@ -28,7 +28,10 @@ being sent. The CRS also forbids sending body content in HTTP GET requests altog
 overwrite request parameters using the body of the request).  
 Normally to disable certain ModSecurity rules, you can just modify your main 
 ModSecurity configuration file and add the line `SecRuleRemoveById <rule_id>` 
-(eg. `SecRuleRemoveById 950002`). However, instead of disabling rules system-wide,
+(eg. `SecRuleRemoveById 950002`). Having a look at the default main ModSecurity
+configuration file, there are two (well, three) rules that are of interest to us:
+
+However, instead of disabling rules system-wide,
 we can disable them based on criteria like request URI or query parameters.
 
 To disable the `Content-Type`-header checking for only the URL `/api`, we'll 
@@ -36,4 +39,12 @@ do the following:
 
 Depending on where you've installed the CRS (I'm going to use 
 `/etc/nginx/modsec/coreruleset-3.0.0` as an example here), navigate to the `rules`
-folder.
+folder. In this folder you should see a file called 
+`REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf.example`. In this file you can define 
+rules that should be applied *before* ModSecurity executes (there should also be a file
+called `RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf.example` in which you can define
+rules that are applied *after* ModSecurity has run). Remove the `.example` extension 
+from the file and open it up.
+
+
+
