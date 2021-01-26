@@ -107,7 +107,6 @@ Let's say our fancy web app keeps track of who has been added to a guest list fo
 
 {% highlight csharp linenos %}
 namespace AzureEventGridSimulatorExample.DTO
-namespace AzureEventGridSimulatorExample.DTO
 {
     public class Person
     {
