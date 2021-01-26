@@ -11,7 +11,7 @@ Enter [AzureEventGridSimulator](https://github.com/pmcilreavy/AzureEventGridSimu
 
 Before we move on, the new Azure.Messaging.EventGrid 4.0.0-beta4 API has changed quite a bit. I could not get `EventGridPublisherClient` to work nicely with AzureEventGridSimulator, so I had to write a little wrapper around it and manually handle posting the events to AzureEventGridSimulator. You can pick up the wrapper on [my GitHub page](https://github.com/horros/EventGridPublisherClientEmulator). You'll need this to continue, as we'll use the beta version of the API.
 
-As an example I'll demonstrate how this all fits together. First things first, clone AzureEventGridSimulator somehwere. Then, let's create a new ASP.NET Core API project (I'm using .NET 5), which we'll call it AZureEventGridSimulatorExample. We also need to add the Azure EventGrid 4.0.0-beta4 package. Make sure you check the "Include prerelease" if you're using Visual Studio. If you're using `dotnet add package` use the `--prerelease`-switch.
+As an example I'll demonstrate how this all fits together. First things first, clone AzureEventGridSimulator somehwere. Then, let's create a new ASP.NET Core API project (I'm using .NET 5), which we'll call it AzureEventGridSimulatorExample. We also need to add the Azure EventGrid 4.0.0-beta4 package. Make sure you check the "Include prerelease" if you're using Visual Studio. If you're using `dotnet add package` use the `--prerelease`-switch.
 
 ![NuGet package install](/assets/images/azegsim/add-nuget.png)
 
