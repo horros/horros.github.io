@@ -3,19 +3,19 @@ layout: post
 title:  Local dev with Event Grid
 date:   2021-01-27 00:15:19 +0200
 ---
-[Azure EventGrid](https://azure.microsoft.com/en-us/services/event-grid/) routes events from (almost) any source to (almost) any destination. It is a fantastic and low-cost way to build an event driven application. It does have it's drawbacks though: In order to develop your app with EventGrid events, you need to be online and you need to open something like an ngrok tunnel to your local machine. In this post we'll explore how we can get around that.
+[Azure Event Grid](https://azure.microsoft.com/en-us/services/event-grid/) routes events from (almost) any source to (almost) any destination. It is a fantastic and low-cost way to build an event driven application. It does have a tiny drawback though: In order to develop your app with EventGrid events, you need to be online and you need to open something like an ngrok tunnel to your local machine. In this post we'll explore how we can get around that.
 
-Azure EventGrid allows you to create _topics_ to which you can post _events_, and you can add _subscribers_ to the topics (optionally with _event filters_), and for every incoming event, EventGrid will send the event to all the subscribers (whose filters match). It is fast, scalable, and cheap as peanuts (something like 0.50€ per million operations). It does have a tiny drawback though: local development. If you want to develop with Azure EventGrid, the only option is to use something like [ngrok](https://ngrok.com) to open a tunnel from the internet to your machine. If you have eg. more than one microservice that you're developing simultaneously, you're probably going to have to make some kind of ingress-type controller that forwards traffic to the correct microservices based on URL path or so. This of course also means you need to be online at all times when developing.
+Azure Event Grid allows you to create _topics_ to which you can post _events_, and you can add _subscribers_ to the topics (optionally with _event filters_), and for every incoming event, Event Grid will send the event to all the subscribers (whose filters match). It is fast, scalable, and cheap as peanuts (something like 0.50€ per million operations). The drawback is local development. If you want to develop with Event Grid, the only option is to use something like [ngrok](https://ngrok.com) to open a tunnel from the internet to your machine. If you have e.g. more than one microservice that you're developing simultaneously, you're probably going to have to make some kind of ingress-type controller that forwards traffic to the correct microservices based on URL path or so. This of course also means you need to be online at all times when developing.
 
-Enter [AzureEventGridSimulator](https://github.com/pmcilreavy/AzureEventGridSimulator) by Paul Mcilreavy! It's a .NET Core 3.1 app that does what it says on the tin, mimics Azure EventGrid, but can be run locally. You can simulate multiple topics through a very easy configuration system (basically it opens up multiple ports, and posting to those ports delivers the events to the specified subscribers). 
+Enter [AzureEventGridSimulator](https://github.com/pmcilreavy/AzureEventGridSimulator) by Paul Mcilreavy! It's a .NET Core 3.1 app that does what it says on the tin, mimics Azure Event Grid, but can be run locally. You can simulate multiple topics through a very easy configuration system (basically it opens up multiple ports, and posting to those ports delivers the events to the specified subscribers).
 
-Before we move on, the new Azure.Messaging.EventGrid 4.0.0-beta4 API has changed quite a bit. I could not get EventGridPublisherClient to work nicely with AzureEventGridSimulator, so I had to write a little wrapper around it and manually handle posting the events to AzureEventGridSimulator. You can pick up the wrapper on [my GitHub page](https://github.com/horros/EventGridPublisherClientEmulator), you'll need this to continue, as we'll use the beta version of the API.
+Before we move on, the new Azure.Messaging.EventGrid 4.0.0-beta4 API has changed quite a bit. I could not get `EventGridPublisherClient` to work nicely with AzureEventGridSimulator, so I had to write a little wrapper around it and manually handle posting the events to AzureEventGridSimulator. You can pick up the wrapper on [my GitHub page](https://github.com/horros/EventGridPublisherClientEmulator). You'll need this to continue, as we'll use the beta version of the API.
 
 As an example I'll demonstrate how this all fits together. First things first, clone AzureEventGridSimulator somehwere. Then, let's create a new ASP.NET Core API project (I'm using .NET 5), which we'll call it AZureEventGridSimulatorExample. We also need to add the Azure EventGrid 4.0.0-beta4 package. Make sure you check the "Include prerelease" if you're using Visual Studio. If you're using `dotnet add package` use the `--prerelease`-switch.
 
 ![NuGet package install](/assets/images/azegsim/add-nuget.png)
 
-We'll delete the default `controllers/WeatherController.cs` and `Weather.cs`, and create a new controller called `EventTestController` (I will assume you are somewhat familiar with ASP.NET Core and know how to add controllers). In order for Azure EventGrid to validate webhook subscribers, it sends a special request with an `aeg-event-type` header set to `SubscriptionValidation`, and it also sends a `ValidationCode`. What subscribers must do is determine if the validation request is for an expected subscription, and reply with the same ValidationCode that they received. Fortunately this is easier than it sounds.
+We'll delete the default `controllers/WeatherController.cs` and `Weather.cs`, and create a new controller called `EventTestController` (I will assume you are somewhat familiar with ASP.NET Core and know how to add controllers). In order for Event Grid to validate webhook subscribers, it sends a special request with an `aeg-event-type` header set to `SubscriptionValidation`, and it also sends a validation code in the data. What subscribers must do is determine if the validation request is for an expected subscription, and reply with the same validation code they received. Fortunately this is easier than it sounds.
 
 {% highlight csharp linenos %}
 namespace AzureEventGridSimulatorExample.Controllers
@@ -68,7 +68,7 @@ namespace AzureEventGridSimulatorExample.Controllers
 }
 {% endhighlight %}
 
-Quick rundown: For HTTP posts, read the request body as JSON. Line 20 checks if the request headers contain the `SubscriptionValidation` event type, and if so run the `HandleValidation` method. The method uses the Parse method from `EventGridEvent` to parse JSON into an EventGridEvent object, and gets the event data (which for subscription validation requests is a `SubscriptionValidationEventData` object). The data object contains the validation code (and also a validation URL you can use to make sure the request is valid). This validation code can just be wrapped in a JsonResult and returned.
+Quick rundown: For HTTP posts to `/EventTest`, read the request body as JSON. Line 20 checks if the request headers contain the `SubscriptionValidation` event type, and if so run the `HandleValidation` method. The method uses the Parse method from `EventGridEvent` to parse JSON into an EventGridEvent object, and gets the event data (which for subscription validation requests is a `SubscriptionValidationEventData` object). The data object contains the validation code (and also a validation URL you can use to make sure the request is valid). This validation code can just be wrapped in a JsonResult and returned.
 
 Let's head over to AzureEventGridSimulator. Open up `appsettings.json` and configure it like this:
 
@@ -162,9 +162,9 @@ private IActionResult HandleEventGridEvents(string jsonContent)
 
 We'll deserialize a list of EventGridEvents from the JSON payload, loop over them and check the event type. If the event type is "GuestList.PersonAdded", we'll pass that to the GuestListEventHandler class.
 
-Now, to actually send messages to AzureEventGridSimulator, we now need to use EventGridPublisherClientEmulator. Clone the repository somehwere, build it, and add it as a project reference to the test project. Or you can just copy the .cs file into the project.
+Now, to actually send messages to Event Grid Simulator, we now need to use EventGridPublisherClientEmulator. Clone the repository somewhere if you haven't already, build it, and add it as a project reference to the test project. Or you can just copy the .cs file into the project.
 
-We'll add a new simple POST-endpoint to the controller that'll take a firstname and lastname parameters, construct the EventGridPublisherClientEmulator and send the events.
+We'll add a new simple (and very insecure and badly written, but it'll suffice for this demo) POST-endpoint to the controller that'll take a firstname and lastname parameters, construct the EventGridPublisherClientEmulator and send the events.
 
 {% highlight csharp linenos %}
 [Route("/SendEvent")]
