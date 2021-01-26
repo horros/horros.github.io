@@ -60,3 +60,10 @@ google_analytics:
 # The following settings are NECESSARY for the Prologue theme to run:
 remote-theme: chrisbobbe/jekyll-theme-prologue
 collections: [sections]
+
+markdown: kramdown
+kramdown:
+  highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
