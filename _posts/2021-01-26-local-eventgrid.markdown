@@ -101,7 +101,7 @@ Fire up the test project (AzureEventGridSimulatorExample) and AzureEventGridSimu
 
 ![Azure Event Grid Simulator up and running](/assets/images/azegsim/azegsimrunning.png)
 
-This means Event Grid Simulator connected to our "microservice" and was successfully validated the subscription! Now it's time to write the code that handles the events.
+This means Event Grid Simulator connected to our "microservice" and successfully validated the subscription! Now it's time to write the code that handles the events.
 
 Let's say our fancy web app keeps track of who has been added to a guest list for some event. That is going to be the data we send, just the person's first name and last name. We create a new folder called DTO, and create a file in it that's called `Person.cs`.
 
