@@ -2,6 +2,7 @@
 layout: post
 title:  Local dev with Event Grid
 date:   2021-01-27 00:15:19 +0200
+comments: true
 ---
 [Azure Event Grid](https://azure.microsoft.com/en-us/services/event-grid/) routes events from (almost) any source to (almost) any destination. It is a fantastic and low-cost way to build an event driven application. It does have a tiny drawback though: In order to develop your app with EventGrid events, you need to be online and you need to open something like an ngrok tunnel to your local machine. In this post we'll explore how we can get around that.
 
@@ -216,3 +217,20 @@ And our microservice has indeed printed what we expected!
 You should now be able to just add more subscriptions, events and handlers! Thanks for reading, and I hope this post has been of some use to you!
 
 The source code for the example controller can be found at <https://github.com/horros/AzureEventGridSimulatorExample>.
+
+<div id="disqus_thread"></div>
+<script>
+
+    var disqus_config = function () {
+    this.page.url = "{{site.url}}{{page.url}}";
+    this.page.identifier = "{{page.id}}";
+    };
+    
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://markusblog-2.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>

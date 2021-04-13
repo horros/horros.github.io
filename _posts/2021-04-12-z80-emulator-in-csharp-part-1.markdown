@@ -1,7 +1,8 @@
 ---
 layout: post
-title:  Z80 emulator in C#
+title:  Z80 emulator in C# - Part 1
 date:   2021-04-12 17:45:19 +0300
+comments: true
 ---
 
 Some time ago I bought a Z80 processor to see if I could make it blink some leds and just maybe make it interact with something. Needless to say, life and 100 other projects came in the way and I never got around to doing that. I'm also not at all familiar with the Z80 having been a 6502-kid with my Commodore 64, so now that I got an inspiration boost I figured "what better way to understand how the Z80 works than write an emulator for it in C#"? The answer I reckon is "loads of better ways", but I'm never one to do things the easy way. Keep in mind I'm writing this as I go along, so huge refactorings are probably inevitable.
@@ -301,3 +302,20 @@ If you let the program run it will keep incrementing the program counter and att
 ![CRASH](/assets/images/z80cpu-1/exception.png)
 
 That's the end of part 1, I'm really quite satisfied with what we've achieved so far!
+
+<div id="disqus_thread"></div>
+<script>
+
+    var disqus_config = function () {
+    this.page.url = "{{site.url}}{{page.url}}";
+    this.page.identifier = "{{page.id}}";
+    };
+    
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://markusblog-2.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
