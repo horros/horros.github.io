@@ -348,3 +348,21 @@ The code is available in a gist here: <https://gist.github.com/horros/a979b6517a
 That's it for part 2, let's see what we come up with for part 3!
 
 (ps. I wrote the stack push/pop part before I noticed the LD A operator which I decided needs to go first, so things might be a little bit wonky.)
+
+
+<div id="disqus_thread"></div>
+<script>
+
+    var disqus_config = function () {
+    this.page.url = "{{site.url}}{{page.url}}";
+    this.page.identifier = "{{page.id}}";
+    };
+    
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://markusblog-2.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
