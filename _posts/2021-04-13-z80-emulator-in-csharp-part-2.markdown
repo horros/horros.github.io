@@ -195,6 +195,9 @@ Let's add the opcode:
 public enum Instruction : byte {
     LD_HL_VAL = 0x21,
     JP_HL = 0xE9,
+    LDA = 0x3E,
+    INC_A = 0x3C,
+    DEC_A = 0x3D,
     PUSH_HL = 0xE5,
     POP_HL = 0xE1
 }
