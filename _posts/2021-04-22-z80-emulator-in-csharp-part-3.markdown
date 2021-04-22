@@ -67,7 +67,7 @@ memory.WriteMemory(0x8846, (byte)CPU.Instruction.INC_A);
 memory.WriteMemory(0x8847, (byte)CPU.Instruction.RET);
 ```
 
-So what we do is load ```0x0A``` into the A-register, then call (read: jump to) ```0x8844```, and if we look at what we put in memory location ```0x8844-0x8847```, it's three ```INC a``` instructions and the ```RET``` instruction, which returns us to address ````0x424C``` and increment the A register three more times, so at the end of it all our A-register should contain ```0x10```.
+So what we do is load ```0x0A``` into the A-register, then call (read: jump to) ```0x8844```, and if we look at what we put in memory location ```0x8844-0x8847```, it's three ```INC a``` instructions and the ```RET``` instruction, which returns us to address ```0x424C``` and increment the A register three more times, so at the end of it all our A-register should contain ```0x10```.
 
 The case handling the two new instructions looks like this:
 
