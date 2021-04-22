@@ -96,7 +96,7 @@ The call instruction first gets the value of the program counter + 2 (we already
 
 The ```RET``` instruction reads whatever is on top of the stack, which is our return address ```0x424C``` and sets the program counter to that, causing us to jump back to that address and continue execution (incrementing the A-register three more times).
 
-Setting a watch on ```CPU.A``` and stepping through the code, we se that we indeed jump to the correct place in memory increment the A-register, jump back and increment the A-register again, ending up with ```0x10``` in the register! I'll leave it as an exercise for the reader to try it out in the Z80 emulator.
+Setting a watch on ```CPU.A``` and stepping through the code, we se that we indeed jump to the correct place in memory increment the A-register, jump back and increment the A-register again, ending up with ```0x10``` in the register! I'll leave it as an exercise for the reader to try it out in the Z80 emulator, the full C# code is available in this gist: <https://gist.github.com/horros/3b85c850af3c5087dd4cef4aff8df148>.
 
 That's it for this article, next time we'll have a look at the registers and implement some *MAFFS*, maybe even figure out how to do multiplication and division which aren't a part of the Z80's instruction set!
 
